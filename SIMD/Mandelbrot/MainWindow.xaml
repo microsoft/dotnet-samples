@@ -1,0 +1,102 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:local="clr-namespace:Mandelbrot"
+        mc:Ignorable="d" 
+        x:Class="Mandelbrot.MainWindow"
+        Title="Mandelbrot" MinHeight="400" MinWidth="600"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" d:DesignHeight="400" Width="600">
+    <Window.Resources>
+        <local:NegationConverter x:Key="NegateConvert"/>
+        <local:VisConverter x:Key="VisibleConvert"/>
+        <Style TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="50"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="MinWidth" Value="50"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Canvas x:Name="canvas" Background="Pink" SizeChanged="Canvas_SizeChanged" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
+        <Image x:Name="theImage" MouseLeftButtonUp="canvas_MouseLeftButtonUp"
+                Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True" UseLayoutRounding="True" />
+        <TextBlock Visibility="{Binding Unsupported, Mode=TwoWay, Converter={StaticResource VisibleConvert}}" Text="Calculation selection is unsupported at this time" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" Background="Red" Padding="5,3,5,5"/>
+        <DockPanel>
+            <Grid Background="#6fff" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Click="Render_Click">_Render</Button>
+                <Button Grid.Column="1" Click="Reset_Click">Rese_t</Button>
+                <Label Target="{Binding ElementName=xcElem}" Grid.Column="2" Content="_X Center"/>
+                <TextBox x:Name="xcElem" Text="{Binding XC,Mode=TwoWay}" Grid.Column="3"/>
+                <Label Target="{Binding ElementName=ycElem}" Content="_Y Center" Grid.Column="4"/>
+                <TextBox x:Name="ycElem" Text="{Binding YC,Mode=TwoWay}" Grid.Column="5"/>
+                <Label Target="{Binding ElementName=scaleElem}" Content="_Scale" Grid.Column="6"/>
+                <TextBox x:Name="scaleElem" Grid.Column="7" Text="{Binding ElementName=slider,Path=Value,Mode=TwoWay}"/>
+            </Grid>
+            <UniformGrid Columns="3" DockPanel.Dock="Bottom" Background="#6fff">
+                <GroupBox Header="Precision" Margin="1">
+                    <UniformGrid Columns="2">
+                        <RadioButton Content="float" IsChecked="{Binding UseFloat, Mode=TwoWay}"/>
+                        <RadioButton Content="double" IsChecked="{Binding UseFloat, Converter={StaticResource NegateConvert}, Mode=TwoWay}"/>
+                    </UniformGrid>
+                </GroupBox>
+                <GroupBox Header="Algorithm" Margin="1">
+                    <UniformGrid Columns="2">
+                        <RadioButton Content="Scalar" IsChecked="{Binding UseSIMD, Converter={StaticResource NegateConvert}, Mode=TwoWay}"/>
+                        <RadioButton Content="SIMD" IsChecked="{Binding UseSIMD, Mode=TwoWay}"/>
+                    </UniformGrid>
+                </GroupBox>
+                <UIElement/>
+                <GroupBox Header="Implementation" Margin="1">
+                    <UniformGrid Columns="2">
+                        <RadioButton Content="Raw Values" IsChecked="{Binding UseADT, Converter={StaticResource NegateConvert}, Mode=TwoWay}"/>
+                        <RadioButton Content="Abstraction" IsChecked="{Binding UseADT, Mode=TwoWay}"/>
+                    </UniformGrid>
+                </GroupBox>
+                <GroupBox Header="# of Threads" Margin="1">
+                    <UniformGrid Columns="2">
+                        <RadioButton Content="One" IsChecked="{Binding UseThreads, Converter={StaticResource NegateConvert}, Mode=TwoWay}"/>
+                        <RadioButton Content="Many" IsChecked="{Binding UseThreads, Mode=TwoWay}"/>
+                    </UniformGrid>
+                </GroupBox>
+                <UniformGrid Columns="2">
+                    <Label Content="Time (msec):" HorizontalAlignment="Right"/>
+                    <TextBox DockPanel.Dock="Right" MinWidth="50" Text="{Binding ElapsedTime,Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch"/>
+                </UniformGrid>
+            </UniformGrid>
+            <Slider x:Name="slider" Minimum="1e-16" Maximum="3.0" Value="{Binding Range,Mode=TwoWay}" Margin="10" Orientation="Vertical" DockPanel.Dock="Right" HorizontalAlignment="Center" />
+            <TextBlock Text="RyuJIT Loaded" Visibility="{Binding IsRyuJIT, Converter={StaticResource VisibleConvert}}" Background="#811f" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="5"/>
+        </DockPanel>
+    </Grid>
+</Window>

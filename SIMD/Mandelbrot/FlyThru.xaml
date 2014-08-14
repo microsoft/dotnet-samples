@@ -1,0 +1,68 @@
+﻿<Window x:Class="Mandelbrot.FlyThru"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Mandelbrot FlyThru" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" 
+        MinHeight="350" 
+        MinWidth="550"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Height="350" Width="550">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="60"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="MinWidth" Value="50"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Canvas x:Name="canvas"/>
+        <Image x:Name="theImage" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True" UseLayoutRounding="True" />
+        <DockPanel>
+            <Grid Background="#4fff" DockPanel.Dock="Top" Opacity=".5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Target="{Binding ElementName=xcElem}" Grid.Column="0" Content="X Center"/>
+                <TextBox x:Name="xcElem" Text="{Binding XC}" Grid.Column="1" IsReadOnly="True"/>
+                <Label Target="{Binding ElementName=ycElem}" Content="Y Center" Grid.Column="2"/>
+                <TextBox x:Name="ycElem" Text="{Binding YC}" Grid.Column="3" IsReadOnly="True"/>
+                <Label Target="{Binding ElementName=scaleElem}" Content="Scale" Grid.Column="4"/>
+                <TextBox x:Name="scaleElem" Grid.Column="5" Text="{Binding Scale}" IsReadOnly="True"/>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom" Background="#4fff" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="SIMD" Grid.Column="0" VerticalAlignment="Center" IsChecked="{Binding UseSIMD, Mode=OneWayToSource}"/>
+                <CheckBox Content="Multi-threaded" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding UseThreads,Mode=OneWayToSource}"/>
+                <Button x:Name="BeginButton" Content="Begin" Grid.Column="4" Click="Begin_Click"/>
+                <Label Content="Elapsed Time:" Grid.Column="2"/>
+                <TextBox DockPanel.Dock="Right" MinWidth="50" Text="{Binding ElapsedTime,Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Grid.Column="3"/>
+            </Grid>
+            <TextBlock Text="RyuJIT Loaded" Visibility="{Binding IsRyuJIT}" 
+                       Background="#711f" Opacity=".5" Foreground="White" 
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="5"/>
+        </DockPanel>
+    </Grid>
+</Window>

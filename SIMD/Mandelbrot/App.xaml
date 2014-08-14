@@ -1,0 +1,11 @@
+﻿<Application x:Class="Mandelbrot.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="FlyThru.xaml">
+    <!-- 
+    Switch the StartupUri to "FlyThru.xaml" to see the demo from //build 2014 
+    Or set it to "MainWindow.xaml" to just get an "explore the Mandelbrot Set" interface
+    -->
+    <Application.Resources>
+    </Application.Resources>
+</Application>
