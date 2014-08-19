@@ -166,13 +166,13 @@ namespace Microsoft.Diagnostics.RuntimeExt
             {
                 int index = GetIndexFromObjects(indexes);
                 var itemsField = m_type.GetFieldByName("_items");
-                ulong addr = (ulong)itemsField.GetValue(m_addr);
+                ulong addr = (ulong)itemsField.GetFieldValue(m_addr);
 
                 // Populate length for bounds check.
                 if (m_len == -1)
                 {
                     var sizeField = m_type.GetFieldByName("_size");
-                    m_len = (int)sizeField.GetValue(m_addr);
+                    m_len = (int)sizeField.GetFieldValue(m_addr);
                 }
 
                 // If type is null, then we've hit a dac bug.  Attempt to work around it,
@@ -336,14 +336,14 @@ namespace Microsoft.Diagnostics.RuntimeExt
             if (IsDictionary())
             {
                 var countField = m_type.GetFieldByName("count");
-                m_len = (int)countField.GetValue(m_addr);
+                m_len = (int)countField.GetFieldValue(m_addr);
                 return m_len;
             }
 
             if (IsList())
             {
                 var sizeField = m_type.GetFieldByName("_size");
-                m_len = (int)sizeField.GetValue(m_addr);
+                m_len = (int)sizeField.GetFieldValue(m_addr);
                 return m_len;
             }
 
@@ -426,7 +426,7 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
             if (field.IsPrimitive())
             {
-                object value = field.GetValue(m_addr, m_inner);
+                object value = field.GetFieldValue(m_addr, m_inner);
                 if (value == null)
                     result = new ClrNullValue(m_heap);
                 else
@@ -436,13 +436,13 @@ namespace Microsoft.Diagnostics.RuntimeExt
             }
             else if (field.IsValueClass())
             {
-                ulong addr = field.GetAddress(m_addr, m_inner);
+                ulong addr = field.GetFieldAddress(m_addr, m_inner);
                 result = new ClrObject(m_heap, field.Type, addr, true);
                 return true;
             }
             else if (field.ElementType == ClrElementType.String)
             {
-                ulong addr = field.GetAddress(m_addr, m_inner);
+                ulong addr = field.GetFieldAddress(m_addr, m_inner);
                 if (!m_heap.GetRuntime().ReadPointer(addr, out addr))
                 {
                     result = new ClrNullValue(m_heap);
@@ -454,7 +454,7 @@ namespace Microsoft.Diagnostics.RuntimeExt
             }
             else
             {
-                object value = field.GetValue(m_addr, m_inner);
+                object value = field.GetFieldValue(m_addr, m_inner);
                 if (value == null)
                     result = new ClrNullValue(m_heap);
                 else

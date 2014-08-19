@@ -64,7 +64,7 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
         public void IsStrong(out int pStrong)
         {
-            pStrong = m_handle.IsStrong ? 1 : 0;
+            pStrong = m_handle.Strong ? 1 : 0;
         }
 
         public void GetRefCount(out int pRefCount)
@@ -184,12 +184,12 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
         public void IsLarge(out int pLarge)
         {
-            pLarge = m_seg.IsLarge ? 1 : 0;
+            pLarge = m_seg.Large ? 1 : 0;
         }
 
         public void IsEphemeral(out int pEphemeral)
         {
-            pEphemeral = m_seg.IsEphemeral ? 1 : 0;
+            pEphemeral = m_seg.Ephemeral ? 1 : 0;
         }
 
         public void GetGen0Info(out ulong pStart, out ulong pLen)
@@ -430,13 +430,13 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
         public void GetFieldValue(IMDAppDomain appDomain, out IMDValue ppValue)
         {
-            object value = m_field.GetValue((ClrAppDomain)appDomain);
+            object value = m_field.GetFieldValue((ClrAppDomain)appDomain);
             ppValue = new MDValue(value, m_field.ElementType);
         }
 
         public void GetFieldAddress(IMDAppDomain appDomain, out ulong pAddress)
         {
-            ulong addr = m_field.GetAddress((ClrAppDomain)appDomain);
+            ulong addr = m_field.GetFieldAddress((ClrAppDomain)appDomain);
             pAddress = addr;
         }
     }
@@ -471,13 +471,13 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
         public void GetFieldValue(IMDAppDomain appDomain, IMDThread thread, out IMDValue ppValue)
         {
-            object value = m_field.GetValue((ClrAppDomain)appDomain, (ClrThread)thread);
+            object value = m_field.GetFieldValue((ClrAppDomain)appDomain, (ClrThread)thread);
             ppValue = new MDValue(value, m_field.ElementType);
         }
 
         public void GetFieldAddress(IMDAppDomain appDomain, IMDThread thread, out ulong pAddress)
         {
-            pAddress = m_field.GetAddress((ClrAppDomain)appDomain, (ClrThread)thread);
+            pAddress = m_field.GetFieldAddress((ClrAppDomain)appDomain, (ClrThread)thread);
         }
     }
 
@@ -516,13 +516,13 @@ namespace Microsoft.Diagnostics.RuntimeExt
 
         public void GetFieldValue(ulong objRef, int interior, out IMDValue ppValue)
         {
-            object value = m_field.GetValue(objRef, interior != 0);
+            object value = m_field.GetFieldValue(objRef, interior != 0);
             ppValue = new MDValue(value, m_field.ElementType);
         }
 
         public void GetFieldAddress(ulong objRef, int interior, out ulong pAddress)
         {
-            pAddress = m_field.GetAddress(objRef, interior != 0);
+            pAddress = m_field.GetFieldAddress(objRef, interior != 0);
         }
     }
 
@@ -660,11 +660,11 @@ namespace Microsoft.Diagnostics.RuntimeExt
                     field.ElementType == ClrElementType.Float ||
                     field.ElementType == ClrElementType.Double)
                 {
-                    fields[i].value = field.GetAddress(obj, interior != 0);
+                    fields[i].value = field.GetFieldAddress(obj, interior != 0);
                 }
                 else
                 {
-                    object value = field.GetValue(obj, interior != 0);
+                    object value = field.GetFieldValue(obj, interior != 0);
 
                     if (value == null)
                     {

@@ -23,25 +23,25 @@ namespace Microsoft.Diagnostics.RuntimeExt
         {
             if (m_field.IsPrimitive())
             {
-                object value = m_field.GetValue(appDomain);
+                object value = m_field.GetFieldValue(appDomain);
                 if (value != null)
                     return new ClrPrimitiveValue(value, m_field.ElementType);
             }
             else if (m_field.IsValueClass())
             {
-                ulong addr = m_field.GetAddress(appDomain);
+                ulong addr = m_field.GetFieldAddress(appDomain);
                 if (addr != 0)
                     return new ClrObject(m_heap, m_field.Type, addr, true);
             }
             else if (m_field.ElementType == ClrElementType.String)
             {
-                ulong addr = m_field.GetAddress(appDomain);
+                ulong addr = m_field.GetFieldAddress(appDomain);
                 if (m_heap.GetRuntime().ReadPointer(addr, out addr))
                     return new ClrObject(m_heap, m_field.Type, addr);
             }
             else
             {
-                object value = m_field.GetValue(appDomain);
+                object value = m_field.GetFieldValue(appDomain);
                 if (value != null)
                     return new ClrObject(m_heap, m_field.Type, (ulong)value);
             }
