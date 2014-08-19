@@ -6,6 +6,10 @@ This repo contains the samples for several .NET components:
 
 * [SIMD](System.Numerics/SIMD)
 
+## System.Reflection.Metadata
+
+* [MD Dumper](System.Reflection.Metadata/MdDumper)
+
 ## Microsoft.Diagnostics.Tracing
 
 * [EventSource](Microsoft.Diagnostics.Tracing/EventSource)
