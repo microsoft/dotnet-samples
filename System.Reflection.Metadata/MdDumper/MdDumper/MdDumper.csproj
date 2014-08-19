@@ -48,8 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Visualization\MetadataVisualizer.cs" />
-    <Compile Include="Visualization\ILVisualizer.cs" />
-    <Compile Include="Visualization\ILVisualizerAsTokens.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

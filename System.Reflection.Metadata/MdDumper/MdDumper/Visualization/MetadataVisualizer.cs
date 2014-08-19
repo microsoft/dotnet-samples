@@ -1066,40 +1066,6 @@ namespace MdDumper.Visualization
             writer.WriteLine();
         }
 
-        public void VisualizeMethodBody(MethodBodyBlock body, MethodHandle generationHandle, int generation)
-        {
-            VisualizeMethodBody(body, (MethodHandle)GetAggregateHandle(generationHandle, generation));
-        }
-
-        public void VisualizeMethodBody(MethodBodyBlock body, MethodHandle methodHandle)
-        {
-            StringBuilder builder = new StringBuilder();
-
-            // TODO: Inspect EncLog to find a containing type and display qualified name.
-            var method = GetMethod(methodHandle);
-            builder.AppendFormat("Method {0} (0x{1:X8})", Literal(method.Name), MetadataTokens.GetToken(methodHandle));
-            builder.AppendLine();
-
-            // TODO: decode signature
-            if (!body.LocalSignature.IsNil)
-            {
-                var localSignature = GetLocalSignature(body.LocalSignature);
-                builder.AppendFormat("  Locals: {0}", Literal(localSignature));
-                builder.AppendLine();
-            }
-
-            ILVisualizerAsTokens.Instance.DumpMethod(
-                builder,
-                body.MaxStack,
-                body.GetILBytes(),
-                ImmutableArray.Create<ILVisualizer.LocalInfo>(),     // TODO
-                ImmutableArray.Create<ILVisualizer.HandlerSpan>());  // TOOD: ILVisualizer.GetHandlerSpans(body.ExceptionRegions)
-
-            builder.AppendLine();
-
-            writer.Write(builder.ToString());
-        }
-
         private sealed class TokenTypeComparer : IComparer<Handle>
         {
             public static readonly TokenTypeComparer Instance = new TokenTypeComparer();

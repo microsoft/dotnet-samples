@@ -30,7 +30,7 @@ namespace MdDumper
                     {
                         var metadataReader = peFile.GetMetadataReader();
                         var visualizer = new MetadataVisualizer(metadataReader, Console.Out);
-                        visualizer.VisualizeAllGenerations();
+                        visualizer.Visualize();
                     }
                 }
                 catch (Exception ex)
