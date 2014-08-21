@@ -14,3 +14,5 @@ This repo contains the samples for several .NET components:
 
 * [EventSource](Microsoft.Diagnostics.Tracing/EventSource)
 * [TraceEvent](Microsoft.Diagnostics.Tracing/TraceEvent)
+
+This project uses the MIT license. See license.txt. 
