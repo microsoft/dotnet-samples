@@ -1,6 +1,6 @@
 # .NET Samples
 
-This repo contains the samples for several .NET components:
+This repo contains samples for several .NET components. Please use them. They are licensed with the MIT license.
 
 ## System.Numerics
 
@@ -14,5 +14,3 @@ This repo contains the samples for several .NET components:
 
 * [EventSource](Microsoft.Diagnostics.Tracing/EventSource)
 * [TraceEvent](Microsoft.Diagnostics.Tracing/TraceEvent)
-
-This project uses the MIT license. See license.txt. 
