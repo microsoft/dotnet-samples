@@ -41,7 +41,7 @@ namespace TraceEventSamples
 
             if (Environment.OSVersion.Version.Major * 10 + Environment.OSVersion.Version.Minor < 62)
             {
-                Out.WriteLine("This demo only works on Win8 / Win 2012 an above)");
+                Out.WriteLine("This demo only works on Win8 / Win 2012 and above)");
                 return;
             }
 
