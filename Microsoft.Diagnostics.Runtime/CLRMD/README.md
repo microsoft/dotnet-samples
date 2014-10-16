@@ -36,3 +36,6 @@ you the surface area of the API and what you can do with it.
 
 4. [Types and Fields in CLRMD](./docs/TypesAndFields.md) - More information about
    dealing with types and fields in CLRMD.
+
+5. [Machine Code in CLRMD](./docs/MachineCode.md) - Getting access to the native
+   code produced by the JIT or NGEN
