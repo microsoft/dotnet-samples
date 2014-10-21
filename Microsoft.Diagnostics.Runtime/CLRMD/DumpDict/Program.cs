@@ -114,24 +114,20 @@ static class Program
 
     static void Main(string[] args)
     {
-        //ClrRuntime runtime = CreateRuntime(@"C:\Users\leculver\Desktop\work\projects\rmd_test_data\dumps\v4.0.30319.239_x86.cab",
-        //                                   @"C:\Users\leculver\Desktop\work\projects\rmd_test_data\dacs");
-        //PrintDict(runtime, "0262b058");
-
-        List<string> typeNames = new List<string>();
-        ClrRuntime runtime = CreateRuntime(@"D:\work\03_09_ml\ml.dmp", @"D:\work\03_09_ml");
-        ClrHeap heap = runtime.GetHeap();
-        foreach (var type in heap.EnumerateTypes())
+        if (args.Length != 3)
         {
-            typeNames.Add(type.Name);
+            Console.WriteLine("Usage: DumpDict <dump> <dac> <objref>");
+            return;
         }
 
-        typeNames.Sort(delegate(string a, string b) { return -a.Length.CompareTo(b.Length); });
+        string dumpFileName = args[0];
+        string dacPath = args[1];
+        string objRef = args[2];
 
-        for (int i = 0; i < 10; ++i)
-            Console.WriteLine("{0} {1}", typeNames[i].Length, typeNames[i]);
+        ClrRuntime runtime = CreateRuntime(dumpFileName, dacPath);
+
+        PrintDict(runtime, objRef);
     }
-
 
     private static ClrRuntime CreateRuntime(string dump, string dac)
     {
