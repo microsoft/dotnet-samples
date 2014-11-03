@@ -10,8 +10,8 @@ namespace RayTracer
         /// <summary>
         /// The world-space position of the scene object
         /// </summary>
-        public Vector3f Position { get; set; }
-        public SceneObjectBase(Vector3f position)
+        public Vector3 Position { get; set; }
+        public SceneObjectBase(Vector3 position)
         {
             this.Position = position;
         }

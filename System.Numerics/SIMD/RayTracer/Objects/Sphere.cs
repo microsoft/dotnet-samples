@@ -19,7 +19,7 @@ namespace RayTracer.Objects
         /// <param name="position">The sphere's origin position</param>
         /// <param name="material">The sphere's surface material</param>
         /// <param name="radius">The radius of the sphere</param>
-        public Sphere(Vector3f position, Material material, float radius)
+        public Sphere(Vector3 position, Material material, float radius)
             : base(position, material)
         {
             this.Radius = radius;
@@ -28,15 +28,15 @@ namespace RayTracer.Objects
         {
             intersection = new Intersection();
 
-            Vector3f rayToSphere = ray.Origin - this.Position;
-            float B = VectorMath.DotProduct(rayToSphere, ray.Direction);
-            float C = VectorMath.DotProduct(rayToSphere, rayToSphere) - (Radius * Radius);
+            Vector3 rayToSphere = ray.Origin - this.Position;
+            float B = Vector3.Dot(rayToSphere, ray.Direction);
+            float C = Vector3.Dot(rayToSphere, rayToSphere) - (Radius * Radius);
             float D = B * B - C;
 
             if (D > 0)
             {
                 var distance = -B - (float)Math.Sqrt(D);
-                var hitPosition = ray.Origin + (ray.Direction * new Vector3f(distance));
+                var hitPosition = ray.Origin + (ray.Direction * new Vector3(distance));
                 var normal = hitPosition - this.Position;
                 UVCoordinate uv = this.GetUVCoordinate(hitPosition);
                 intersection = new Intersection(hitPosition, normal, ray.Direction, this, Material.GetDiffuseColorAtCoordinates(uv), distance);
@@ -48,7 +48,7 @@ namespace RayTracer.Objects
             }
         }
 
-        public override UVCoordinate GetUVCoordinate(Vector3f hitPosition)
+        public override UVCoordinate GetUVCoordinate(Vector3 hitPosition)
         {
             var toCenter = (hitPosition - this.Position).Normalized();
 

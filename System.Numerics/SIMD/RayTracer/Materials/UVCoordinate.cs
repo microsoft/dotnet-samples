@@ -7,7 +7,7 @@ namespace RayTracer.Materials
     /// </summary>
     public struct UVCoordinate
     {
-        private Vector2f backingVector;
+        private Vector2 backingVector;
         /// <summary>
         /// The U value of the coordinate
         /// </summary>
@@ -24,7 +24,7 @@ namespace RayTracer.Materials
         /// <param name="v"></param>
         public UVCoordinate(float u, float v)
         {
-            this.backingVector = new Vector2f(u, v);
+            this.backingVector = new Vector2(u, v);
         }
     }
 }

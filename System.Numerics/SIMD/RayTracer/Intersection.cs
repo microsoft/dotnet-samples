@@ -12,15 +12,15 @@ namespace RayTracer
         /// <summary>
         /// The point at which the intersection occurred
         /// </summary>
-        public readonly Vector3f Point;
+        public readonly Vector3 Point;
         /// <summary>
         /// The surface's normal at the intersection point
         /// </summary>
-        public readonly Vector3f Normal;
+        public readonly Vector3 Normal;
         /// <summary>
         /// The direction the ray was traveling on impact.
         /// </summary>
-        public readonly Vector3f ImpactDirection;
+        public readonly Vector3 ImpactDirection;
         /// <summary>
         /// The object that was hit
         /// </summary>
@@ -43,7 +43,7 @@ namespace RayTracer
         /// <param name="obj">The object that was intersected</param>
         /// <param name="color">The object's raw color at the intersection point</param>
         /// <param name="distance">The distance from the ray's origin that the intersection occurred</param>
-        public Intersection(Vector3f point, Vector3f normal, Vector3f impactDirection, DrawableSceneObject obj, Color color, float distance)
+        public Intersection(Vector3 point, Vector3 normal, Vector3 impactDirection, DrawableSceneObject obj, Color color, float distance)
         {
             this.Point = point;
             this.Normal = normal;

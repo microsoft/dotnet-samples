@@ -33,7 +33,7 @@ namespace RayTracer.Objects
         /// <param name="position">World position of the light</param>
         /// <param name="intensity">Light intensity</param>
         /// <param name="color">Light color</param>
-        public Light(Vector3f position, float intensity, Color color)
+        public Light(Vector3 position, float intensity, Color color)
             : base(position)
         {
             this.Color = color;

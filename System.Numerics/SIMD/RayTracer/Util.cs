@@ -49,29 +49,29 @@ namespace RayTracer
             return radians;
         }
 
-        public static readonly Vector3f RightVector = new Vector3f(1, 0, 0);
-        public static readonly Vector3f UpVector = new Vector3f(0, 1, 0);
-        public static readonly Vector3f ForwardVector = new Vector3f(0, 0, 1);
+        public static readonly Vector3 RightVector = new Vector3(1, 0, 0);
+        public static readonly Vector3 UpVector = new Vector3(0, 1, 0);
+        public static readonly Vector3 ForwardVector = new Vector3(0, 0, 1);
 
-        public static Vector3f CrossProduct(Vector3f left, Vector3f right)
+        public static Vector3 CrossProduct(Vector3 left, Vector3 right)
         {
-            return new Vector3f(
+            return new Vector3(
                 left.Y * right.Z - left.Z * right.Y,
                 left.Z * right.X - left.X * right.Z,
                 left.X * right.Y - left.Y * right.X);
         }
 
-        public static float Magnitude(this Vector3f v)
+        public static float Magnitude(this Vector3 v)
         {
-            return (float)Math.Abs(Math.Sqrt(VectorMath.DotProduct(v,v)));
+            return (float)Math.Abs(Math.Sqrt(Vector3.Dot(v,v)));
         }
 
-        public static Vector3f Normalized(this Vector3f v)
+        public static Vector3 Normalized(this Vector3 v)
         {
             var mag = v.Magnitude();
             if (mag != 1)
             {
-                return v / new Vector3f(mag);
+                return v / new Vector3(mag);
             }
             else
             {
@@ -79,14 +79,14 @@ namespace RayTracer
             }
         }
 
-        public static float Distance(Vector3f first, Vector3f second)
+        public static float Distance(Vector3 first, Vector3 second)
         {
             return (first - second).Magnitude();
         }
 
-        public static Vector3f Projection(Vector3f projectedVector, Vector3f directionVector)
+        public static Vector3 Projection(Vector3 projectedVector, Vector3 directionVector)
         {
-            var mag = VectorMath.DotProduct(projectedVector, directionVector.Normalized());
+            var mag = Vector3.Dot(projectedVector, directionVector.Normalized());
             return directionVector * mag;
         }
     }

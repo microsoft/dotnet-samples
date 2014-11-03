@@ -19,7 +19,7 @@ namespace RayTracer
         /// <summary> The color's alpha component, between 0.0 and 1.0 </summary>
         public float A { get { return backingVector.W; } }
 
-        private readonly Vector4f backingVector;
+        private readonly Vector4 backingVector;
 
         /// <summary>
         /// Constructs a color from the given component values.
@@ -30,10 +30,10 @@ namespace RayTracer
         /// <param name="a">The color's alpha value</param>
         public Color(float r, float g, float b, float a)
         {
-            this.backingVector = new Vector4f(r, g, b, a);
+            this.backingVector = new Vector4(r, g, b, a);
         }
 
-        private Color(Vector4f vec)
+        private Color(Vector4 vec)
         {
             this.backingVector = vec;
         }

@@ -9,6 +9,8 @@ using System.Numerics;
 using System.Diagnostics;
 using System.Threading;
 
+using Vector = System.Numerics.Vector;
+
 namespace Mandelbrot
 {
     /// <summary>
@@ -27,7 +29,7 @@ namespace Mandelbrot
         {
             base.OnStartup(e);
 
-            if (!VectorMath.IsHardwareAccelerated)
+            if (!Vector.IsHardwareAccelerated)
             {
                 MessageBox.Show("SIMD isn't enabled for the current process. Please make sure that" + Environment.NewLine + Environment.NewLine +
                                 "(1) You've run the 'enable-jit.cmd' script prior to running this app" + Environment.NewLine + 

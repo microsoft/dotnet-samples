@@ -20,11 +20,11 @@ namespace RayTracer.Objects
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public abstract UVCoordinate GetUVCoordinate(Vector3f position);
+        public abstract UVCoordinate GetUVCoordinate(Vector3 position);
         
         public Material Material { get; set; }
 
-        public DrawableSceneObject(Vector3f position, Material material)
+        public DrawableSceneObject(Vector3 position, Material material)
             : base(position)
         {
             this.Material = material;

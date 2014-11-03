@@ -43,8 +43,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics.Vectors">
-      <HintPath>..\packages\Microsoft.Bcl.Simd.1.0.1-beta\lib\portable-net45+win8\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Vectors, Version=1.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Numerics.Vectors.1.1.5-beta\lib\portable-net45+win8\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,7 +83,7 @@
     </Page>
     <Compile Include="MainWindow.xaml.cs" />
     <Compile Include="Materials\Material.cs" />
-    <Compile Include="Objects\Plane.cs" />
+    <Compile Include="Objects\InfinitePlane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,11 +95,11 @@
     <Compile Include="Objects\Sphere.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Materials\UVCoordinate.cs" />
-    <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

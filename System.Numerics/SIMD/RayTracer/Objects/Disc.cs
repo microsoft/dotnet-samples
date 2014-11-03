@@ -6,11 +6,11 @@ namespace RayTracer.Objects
     /// <summary>
     /// A two-dimensional circular plane object. Limited in radius rather than extending infinitely.
     /// </summary>
-    public class Disc : Plane
+    public class Disc : InfinitePlane
     {
         private float radius;
 
-        public Disc(Vector3f centerPosition, Material material, Vector3f normalDirection, float radius, float cellWidth)
+        public Disc(Vector3 centerPosition, Material material, Vector3 normalDirection, float radius, float cellWidth)
             : base(centerPosition, material, normalDirection, cellWidth)
         {
             this.radius = radius;
@@ -28,7 +28,7 @@ namespace RayTracer.Objects
             }
         }
 
-        private bool WithinArea(Vector3f location)
+        private bool WithinArea(Vector3 location)
         {
             var distanceFromCenter = (this.Position - location).Magnitude();
             return distanceFromCenter <= radius;

@@ -31,7 +31,7 @@ namespace Algorithms
             Vector<float> vmax_iters = new Vector<float>((float)max_iters);
             Vector<float> vlimit = new Vector<float>(limit);
             Vector<float> vstep = new Vector<float>(step);
-            Vector<float> vinc = new Vector<float>((float)Vector<float>.Length * step);
+            Vector<float> vinc = new Vector<float>((float)Vector<float>.Count * step);
             Vector<float> vxmax = new Vector<float>(xmax);
             Vector<float> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -42,7 +42,7 @@ namespace Algorithms
 
                 Vector<float> vy = new Vector<float>(ymin + step * yp);
                 int xp = 0;
-                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<int>.Length)
+                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<int>.Count)
                 {
                     ComplexVecFloat num = new ComplexVecFloat(vx, vy);
                     ComplexVecFloat accum = num;
@@ -70,7 +70,7 @@ namespace Algorithms
             Vector<float> vmax_iters = new Vector<float>((float)max_iters);
             Vector<float> vlimit = new Vector<float>(limit);
             Vector<float> vstep = new Vector<float>(step);
-            Vector<float> vinc = new Vector<float>((float)Vector<float>.Length * step);
+            Vector<float> vinc = new Vector<float>((float)Vector<float>.Count * step);
             Vector<float> vxmax = new Vector<float>(xmax);
             Vector<float> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -81,7 +81,7 @@ namespace Algorithms
 
                 Vector<float> vy = new Vector<float>(ymin + step * yp);
                 int xp = 0;
-                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<float>.Length)
+                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<float>.Count)
                 {
                     Vector<float> accumx = vx;
                     Vector<float> accumy = vy;
@@ -114,7 +114,7 @@ namespace Algorithms
             Vector<float> vlimit = new Vector<float>(limit);
             Vector<float> vstep = new Vector<float>(step);
             Vector<float> vxmax = new Vector<float>(xmax);
-            Vector<float> vinc = new Vector<float>((float)Vector<float>.Length * step);
+            Vector<float> vinc = new Vector<float>((float)Vector<float>.Count * step);
             Vector<float> vxmin = VectorHelper.Create(i => xmin + step * i);
 
             float y = ymin;
@@ -122,7 +122,7 @@ namespace Algorithms
             for (Vector<float> vy = new Vector<float>(ymin); y <= ymax && !Abort; vy += vstep, y += step, yp++)
             {
                 int xp = 0;
-                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAny(vx, vxmax); vx += vinc, xp += Vector<int>.Length)
+                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAny(vx, vxmax); vx += vinc, xp += Vector<int>.Count)
                 {
                     ComplexVecFloat num = new ComplexVecFloat(vx, vy);
                     ComplexVecFloat accum = num;
@@ -151,7 +151,7 @@ namespace Algorithms
             Vector<float> vlimit = new Vector<float>(limit);
             Vector<float> vstep = new Vector<float>(step);
             Vector<float> vxmax = new Vector<float>(xmax);
-            Vector<float> vinc = new Vector<float>((float)Vector<float>.Length * step);
+            Vector<float> vinc = new Vector<float>((float)Vector<float>.Count * step);
             Vector<float> vxmin = VectorHelper.Create(i => xmin + step * i);
 
             float y = ymin;
@@ -159,7 +159,7 @@ namespace Algorithms
             for (Vector<float> vy = new Vector<float>(ymin); y <= ymax && !Abort; vy += vstep, y += step, yp++)
             {
                 int xp = 0;
-                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<int>.Length)
+                for (Vector<float> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<int>.Count)
                 {
                     Vector<float> accumx = vx;
                     Vector<float> accumy = vy;

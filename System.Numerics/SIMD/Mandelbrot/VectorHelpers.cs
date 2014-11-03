@@ -10,7 +10,7 @@ namespace Algorithms
         // Don't use it on a hot code path (i.e. inside a loop)
         public static Vector<T> Create<T>(Func<int, T> creator) where T : struct
         {
-            T[] data = new T[Vector<T>.Length];
+            T[] data = new T[Vector<T>.Count];
             for (int i = 0; i < data.Length; i++)
                 data[i] = creator(i);
             return new Vector<T>(data);
@@ -22,7 +22,7 @@ namespace Algorithms
         // i.e. Don't use it somewhere that performance truly matters
         public static void ForEach<T>(this Vector<T> vec, Action<T, int> op) where T : struct
         {
-            for (int i = 0; i < Vector<T>.Length; i++)
+            for (int i = 0; i < Vector<T>.Count; i++)
                 op(vec[i], i);
         }
     }

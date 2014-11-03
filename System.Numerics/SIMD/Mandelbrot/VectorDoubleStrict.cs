@@ -38,7 +38,7 @@ namespace Algorithms
             Vector<double> vmax_iters = new Vector<double>((double)max_iters);
             Vector<double> vlimit = new Vector<double>(limit);
             Vector<double> vstep = new Vector<double>(step);
-            Vector<double> vinc = new Vector<double>((double)Vector<double>.Length * step);
+            Vector<double> vinc = new Vector<double>((double)Vector<double>.Count * step);
             Vector<double> vxmax = new Vector<double>(xmax);
             Vector<double> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -49,7 +49,7 @@ namespace Algorithms
 
                 Vector<double> vy = new Vector<double>(ymin + step * yp);
                 int xp = 0;
-                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Length)
+                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Count)
                 {
                     ComplexVecDouble num = new ComplexVecDouble(vx, vy);
                     ComplexVecDouble accum = num;
@@ -83,7 +83,7 @@ namespace Algorithms
             Vector<double> vmax_iters = new Vector<double>((double)max_iters);
             Vector<double> vlimit = new Vector<double>(limit);
             Vector<double> vstep = new Vector<double>(step);
-            Vector<double> vinc = new Vector<double>((double)Vector<double>.Length * step);
+            Vector<double> vinc = new Vector<double>((double)Vector<double>.Count * step);
             Vector<double> vxmax = new Vector<double>(xmax);
             Vector<double> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -94,7 +94,7 @@ namespace Algorithms
 
                 Vector<double> vy = new Vector<double>(ymin + step * yp);
                 int xp = 0;
-                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Length)
+                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Count)
                 {
                     Vector<double> accumx = vx;
                     Vector<double> accumy = vy;
@@ -132,7 +132,7 @@ namespace Algorithms
             Vector<double> vmax_iters = new Vector<double>((double)max_iters);
             Vector<double> vlimit = new Vector<double>(limit);
             Vector<double> vstep = new Vector<double>(step);
-            Vector<double> vinc = new Vector<double>((double)Vector<double>.Length * step);
+            Vector<double> vinc = new Vector<double>((double)Vector<double>.Count * step);
             Vector<double> vxmax = new Vector<double>(xmax);
             Vector<double> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -141,7 +141,7 @@ namespace Algorithms
             for (Vector<double> vy = new Vector<double>(ymin); y <= ymax && !Abort; vy += vstep, y += step, yp++)
             {
                 int xp = 0;
-                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAny(vx, vxmax); vx += vinc, xp += Vector<double>.Length)
+                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAny(vx, vxmax); vx += vinc, xp += Vector<double>.Count)
                 {
                     ComplexVecDouble num = new ComplexVecDouble(vx, vy);
                     ComplexVecDouble accum = num;
@@ -175,7 +175,7 @@ namespace Algorithms
             Vector<double> vmax_iters = new Vector<double>((double)max_iters);
             Vector<double> vlimit = new Vector<double>(limit);
             Vector<double> vstep = new Vector<double>(step);
-            Vector<double> vinc = new Vector<double>((double)Vector<double>.Length * step);
+            Vector<double> vinc = new Vector<double>((double)Vector<double>.Count * step);
             Vector<double> vxmax = new Vector<double>(xmax);
             Vector<double> vxmin = VectorHelper.Create(i => xmin + step * i);
 
@@ -184,7 +184,7 @@ namespace Algorithms
             for (Vector<double> vy = new Vector<double>(ymin); y <= ymax && !Abort; vy += vstep, y += step, yp++)
             {
                 int xp = 0;
-                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Length)
+                for (Vector<double> vx = vxmin; Vector.LessThanOrEqualAll(vx, vxmax); vx += vinc, xp += Vector<double>.Count)
                 {
                     Vector<double> accumx = vx;
                     Vector<double> accumy = vy;

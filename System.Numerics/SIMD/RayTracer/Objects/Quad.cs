@@ -6,11 +6,11 @@ namespace RayTracer.Objects
     /// <summary>
     /// A quad is a plane that is limited in all four directions rather than extending infinitely.
     /// </summary>
-    public class Quad : Plane
+    public class Quad : InfinitePlane
     {
         private float width, height;
 
-        public Quad(Vector3f centerPosition, Material material, Vector3f normalDirection, float width, float height, float cellWidth)
+        public Quad(Vector3 centerPosition, Material material, Vector3 normalDirection, float width, float height, float cellWidth)
             : base(centerPosition, material, normalDirection, cellWidth)
         {
             this.width = width;
@@ -29,7 +29,7 @@ namespace RayTracer.Objects
             }
         }
 
-        private bool WithinArea(Vector3f location)
+        private bool WithinArea(Vector3 location)
         {
             var differenceFromCenter = this.Position - location;
             var uLength = Util.Projection(differenceFromCenter, uDirection);

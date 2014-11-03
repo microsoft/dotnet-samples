@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Vector = System.Numerics.Vector;
+
 namespace RayTracer
 {
     /// <summary>
@@ -26,7 +28,7 @@ namespace RayTracer
         {
             base.OnStartup(e);
 
-            if (!VectorMath.IsHardwareAccelerated)
+            if (!Vector.IsHardwareAccelerated)
             {
                 MessageBox.Show("SIMD isn't enabled for the current process. Please make sure that" + Environment.NewLine + Environment.NewLine +
                                 "(1) You've run the 'enable-jit.cmd' script prior to running this app" + Environment.NewLine +
