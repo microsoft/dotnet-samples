@@ -197,10 +197,7 @@ namespace Microsoft.Diagnostics.Runtime
             }
             else if (major == 4)
             {
-                if (version == "v4.6.30.0" && patch == 0) // .NET 4.5.3/4.6 CTP
-                    return new V45Runtime(this, lib);
-
-                if (patch < 10000)
+                if (minor < 6 && patch < 10000)
                     ver = DesktopVersion.v4;
                 else
                     return new V45Runtime(this, lib);
