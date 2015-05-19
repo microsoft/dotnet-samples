@@ -191,57 +191,6 @@ folder, returning the path on disk to the location of the Dac. You can this pass
 on the symbol server (or due to network problems), at which point this function
 will return null.
 
-You may want a bit more control over this though (such as not just downloading
-from the public symbol server, but also using microsoft's internal symbol
-servers. You may also specify where to cache the files. This is controled by the
-symbolPath parameter, and defaultLocalCache parameters. Here is an example, but
-please see the intellisense documentation on TryDownloadDac's overrides for
-further information these parameters and behavior:
-
-    string dacLocation = clrVersion.TryDownloadDac("SRV*http://symweb.corp.microsoft.com", @"c:\symcache");
-
-One last note, if your tool is shipped publically, you want to use the default
-public symbol server `SRV*http://msdl.microsoft.com/download/symbols`. If you
-are attempting to write a tool that takes advantage of the internal Microsoft
-symbol server, I would suggest using this code:
-
-    string dacLocation = clrVersion.TryDownloadDac(GetSymbolPath());
-
-Where `GetSymbolPath` is defined as:
-
-    static string GetSymbolPath()
-    {
-        string path = null;
-        if (ComputerNameExists("symweb.corp.microsoft.com"))
-            path = "SRV*http://symweb.corp.microsoft.com";   // Internal Microsoft location.
-        else
-            path = "SRV*http://msdl.microsoft.com/download/symbols";
-
-        if (ComputerNameExists("ddrps.corp.microsoft.com"))
-            path = path + ";" + @"SRV*\\ddrps.corp.microsoft.com\symbols";
-        if (ComputerNameExists("clrmain"))
-            path = path + ";" + @"SRV*\\clrmain\symbols";
-
-        return path;
-    }
-
-    public static bool ComputerNameExists(string computerName, int timeoutMSec = 700)
-    {
-        try
-        {
-            System.Net.IPHostEntry ipEntry = null;
-            var result = System.Net.Dns.BeginGetHostEntry(computerName, null, null);
-            if (result.AsyncWaitHandle.WaitOne(timeoutMSec))
-                ipEntry = System.Net.Dns.EndGetHostEntry(result);
-            if (ipEntry != null)
-                return true;
-        }
-        catch (Exception) { }
-        return false;
-    }
-
-This should find most symbols for internal builds when inside corpnet.
-
 ## Putting it all together
 
 We have covered the building blocks of creating a `DataTarget` and a
@@ -257,7 +206,7 @@ We have covered the building blocks of creating a `DataTarget` and a
             // TryDownloadDac will also check to see if you have the matching
             // mscordacwks installed locally, so you don't need to also check
             // TryGetDacLocation as well.
-            dacLocation = version.TryDownloadDac(GetSymbolPath());
+            dacLocation = version.TryDownloadDac();
         }
 
         if (string.IsNullOrEmpty(dacLocation) || !File.Exists(dacLocation))
