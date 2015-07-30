@@ -197,7 +197,7 @@ namespace Microsoft.Diagnostics.Runtime
             }
             else if (major == 4)
             {
-                if (patch < 10000)
+                if (minor < 6 && patch < 10000)
                     ver = DesktopVersion.v4;
                 else
                     return new V45Runtime(this, lib);
