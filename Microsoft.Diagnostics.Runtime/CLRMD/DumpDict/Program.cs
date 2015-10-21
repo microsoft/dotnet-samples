@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿// Please go to the ClrMD project page on github for full source and to report issues:
+//    https://github.com/Microsoft/clrmd
+
+using System;
 using Microsoft.Diagnostics.Runtime;
 using System.IO;
-using System.Xml;
-using System.Linq;
-using System.Text;
-using System.IO.Compression;
-using System.Collections;
-
 
 static class Program
 {
@@ -56,7 +50,7 @@ static class Program
             return;
 
         ClrType entryArray = heap.GetObjectType(entries);
-        ClrType arrayComponent = entryArray.ArrayComponentType;
+        ClrType arrayComponent = entryArray.ComponentType;
         ClrInstanceField hashCodeField = arrayComponent.GetFieldByName("hashCode");
         ClrInstanceField keyField = arrayComponent.GetFieldByName("key");
         ClrInstanceField valueField = arrayComponent.GetFieldByName("value");
@@ -67,9 +61,9 @@ static class Program
         {
             ulong arrayElementAddr = entryArray.GetArrayElementAddress(entries, i);
 
-            int hashCode = (int)hashCodeField.GetFieldValue(arrayElementAddr, true);
-            object key = keyField.GetFieldValue(arrayElementAddr, true);
-            object value = valueField.GetFieldValue(arrayElementAddr, true);
+            int hashCode = (int)hashCodeField.GetValue(arrayElementAddr, true);
+            object key = keyField.GetValue(arrayElementAddr, true);
+            object value = valueField.GetValue(arrayElementAddr, true);
 
             key = Format(heap, key);
             value = Format(heap, value);
@@ -105,7 +99,7 @@ static class Program
         if (field == null)
             return 0;
 
-        object val = field.GetFieldValue(obj);
+        object val = field.GetValue(obj);
         if (val is ulong)
             return (ulong)val;
 
@@ -141,15 +135,14 @@ static class Program
 
         // Note I just take the first version of CLR in the process.  You can loop over every loaded
         // CLR to handle the SxS case where both v2 and v4 are loaded in the process.
-        var version = dataTarget.ClrVersions[0];
+        ClrInfo version = dataTarget.ClrVersions[0];
 
-        // Next, let's try to make sure we have the right Dac to load.  CLRVersionInfo will actually
-        // have the full path to the right dac if you are debugging the a version of CLR you have installed.
-        // If they gave us a path (and not the actual filename of the dac), we'll try to handle that case too:
+        // Next, let's try to make sure we have the right Dac to load.  Note we are doing this manually for
+        // illustration.  Simply calling version.CreateRuntime with no arguments does the same steps.
         if (dac != null && Directory.Exists(dac))
             dac = Path.Combine(dac, version.DacInfo.FileName);
         else if (dac == null || !File.Exists(dac))
-            dac = version.TryGetDacLocation();
+            dac = dataTarget.SymbolLocator.FindBinary(version.DacInfo);
 
         // Finally, check to see if the dac exists.  If not, throw an exception.
         if (dac == null || !File.Exists(dac))
@@ -157,7 +150,7 @@ static class Program
 
         // Now that we have the DataTarget, the version of CLR, and the right dac, we create and return a
         // ClrRuntime instance.
-        return dataTarget.CreateRuntime(dac);
+        return version.CreateRuntime(dac);
     }
 }
 

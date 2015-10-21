@@ -1,4 +1,7 @@
-﻿// This example shows how to determine live objects which live on the heap.  "GetLiveObjects"
+﻿// Please go to the ClrMD project page on github for full source and to report issues:
+//    https://github.com/Microsoft/clrmd
+
+// This example shows how to determine live objects which live on the heap.  "GetLiveObjects"
 // does a walk of all objects on the heap which are reachable from roots and places it into
 // an ObjectSet.
 
@@ -8,8 +11,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Diagnostics.Runtime;
 
 namespace DumpHeapLive
@@ -134,8 +135,7 @@ namespace DumpHeapLive
 
             return considered;
         }
-
-
+        
         private static ClrRuntime CreateRuntime(string dump, string dac)
         {
             // Create the data target.  This tells us the versions of CLR loaded in the target process.
@@ -148,15 +148,14 @@ namespace DumpHeapLive
 
             // Note I just take the first version of CLR in the process.  You can loop over every loaded
             // CLR to handle the SxS case where both v2 and v4 are loaded in the process.
-            var version = dataTarget.ClrVersions[0];
+            ClrInfo version = dataTarget.ClrVersions[0];
 
-            // Next, let's try to make sure we have the right Dac to load.  CLRVersionInfo will actually
-            // have the full path to the right dac if you are debugging the a version of CLR you have installed.
-            // If they gave us a path (and not the actual filename of the dac), we'll try to handle that case too:
+            // Next, let's try to make sure we have the right Dac to load.  Note we are doing this manually for
+            // illustration.  Simply calling version.CreateRuntime with no arguments does the same steps.
             if (dac != null && Directory.Exists(dac))
                 dac = Path.Combine(dac, version.DacInfo.FileName);
             else if (dac == null || !File.Exists(dac))
-                dac = version.TryGetDacLocation();
+                dac = dataTarget.SymbolLocator.FindBinary(version.DacInfo);
 
             // Finally, check to see if the dac exists.  If not, throw an exception.
             if (dac == null || !File.Exists(dac))
@@ -164,7 +163,7 @@ namespace DumpHeapLive
 
             // Now that we have the DataTarget, the version of CLR, and the right dac, we create and return a
             // ClrRuntime instance.
-            return dataTarget.CreateRuntime(dac);
+            return version.CreateRuntime(dac);
         }
 
         public static bool TryParseArgs(string[] args, out string dump, out string dac, out bool stat, out bool live)

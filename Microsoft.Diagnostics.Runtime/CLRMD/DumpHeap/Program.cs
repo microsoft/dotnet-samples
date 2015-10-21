@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Please go to the ClrMD project page on github for full source and to report issues:
+//    https://github.com/Microsoft/clrmd
+
+using System;
 using Microsoft.Diagnostics.Runtime;
 using System.IO;
 using System.Collections.Generic;
@@ -103,15 +106,14 @@ namespace DumpHeap
 
             // Note I just take the first version of CLR in the process.  You can loop over every loaded
             // CLR to handle the SxS case where both v2 and v4 are loaded in the process.
-            var version = dataTarget.ClrVersions[0];
+            ClrInfo version = dataTarget.ClrVersions[0];
 
-            // Next, let's try to make sure we have the right Dac to load.  CLRVersionInfo will actually
-            // have the full path to the right dac if you are debugging the a version of CLR you have installed.
-            // If they gave us a path (and not the actual filename of the dac), we'll try to handle that case too:
+            // Next, let's try to make sure we have the right Dac to load.  Note we are doing this manually for
+            // illustration.  Simply calling version.CreateRuntime with no arguments does the same steps.
             if (dac != null && Directory.Exists(dac))
                 dac = Path.Combine(dac, version.DacInfo.FileName);
             else if (dac == null || !File.Exists(dac))
-                dac = version.TryGetDacLocation();
+                dac = dataTarget.SymbolLocator.FindBinary(version.DacInfo);
 
             // Finally, check to see if the dac exists.  If not, throw an exception.
             if (dac == null || !File.Exists(dac))
@@ -119,7 +121,7 @@ namespace DumpHeap
 
             // Now that we have the DataTarget, the version of CLR, and the right dac, we create and return a
             // ClrRuntime instance.
-            return dataTarget.CreateRuntime(dac);
+            return version.CreateRuntime(dac);
         }
 
         public static bool TryParseArgs(string[] args, out string dump, out string dac, out bool stat)
