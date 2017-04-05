@@ -18,3 +18,8 @@ This repo contains samples for several .NET components. Please use them. They ar
 
 * [EventSource](Microsoft.Diagnostics.Tracing/EventSource)
 * [TraceEvent](Microsoft.Diagnostics.Tracing/TraceEvent)
+
+## Windows Forms HDPI
+
+* [Per-Monitor Aware](WinForms-HDPI/PerMonitorAware)
+* [System Aware](WinForms-HDPI/SystemAware)
