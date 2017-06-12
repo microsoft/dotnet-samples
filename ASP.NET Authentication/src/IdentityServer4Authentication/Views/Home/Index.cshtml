@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="row">
+    <h1>IdentityServer4 Authentication Service</h1>
+    <div class="row">
+        <p class="col-xs-6">
+            Sample ASP.NET Core security token service built with IdentityServer4, ASP.NET Core Identity, and EntityFramework.Core.
+            This simple front-end allows creating users. To login from an API or native client, use the OpenID Connect endpoint: /connect/token.
+        </p>
+    </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <h2>Welcome, @UserManager.GetUserName(User)!</h2>
+        <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
+            <button type="submit" class="btn btn-default btn-lg">Sign Out</button>
+        </form>
+    }
+    else
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-default btn-lg">Register</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-default btn-lg">Sign In</a>
+    }
+</div>
