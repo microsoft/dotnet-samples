@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
-using System.Text;
 
 namespace MdDumper.Visualization
 {
@@ -17,7 +16,7 @@ namespace MdDumper.Visualization
         private readonly MetadataAggregator aggregator;
 
         // enc map for each delta reader
-        private readonly ImmutableArray<ImmutableArray<Handle>> encMaps;
+        private readonly ImmutableArray<ImmutableArray<EntityHandle>> encMaps;
 
         private MetadataReader reader;
         private readonly List<string[]> pendingRows = new List<string[]>();
@@ -185,12 +184,12 @@ namespace MdDumper.Visualization
             pendingRows.Clear();
         }
 
-        private Handle GetAggregateHandle(Handle generationHandle, int generation)
+        private Handle GetAggregateHandle(EntityHandle generationHandle, int generation)
         {
             var encMap = encMaps[generation - 1];
 
             int start, count;
-            if (!TryGetHandleRange(encMap, generationHandle.HandleType, out start, out count))
+            if (!TryGetHandleRange(encMap, generationHandle.Kind, out start, out count))
             {
                 throw new BadImageFormatException(string.Format("EncMap is missing record for {0:8X}.", MetadataTokens.GetToken(generationHandle)));
             }
@@ -198,7 +197,7 @@ namespace MdDumper.Visualization
             return encMap[start + MetadataTokens.GetRowNumber(generationHandle) - 1];
         }
 
-        private static bool TryGetHandleRange(ImmutableArray<Handle> handles, HandleType handleType, out int start, out int count)
+        private static bool TryGetHandleRange(ImmutableArray<EntityHandle> handles, HandleKind handleType, out int start, out int count)
         {
             TableIndex tableIndex;
             MetadataTokens.TryGetTableIndex(handleType, out tableIndex);
@@ -212,13 +211,13 @@ namespace MdDumper.Visualization
             }
 
             int s = mapIndex;
-            while (s >= 0 && handles[s].HandleType == handleType)
+            while (s >= 0 && handles[s].Kind == handleType)
             {
                 s--;
             }
 
             int e = mapIndex;
-            while (e < handles.Length && handles[e].HandleType == handleType)
+            while (e < handles.Length && handles[e].Kind== handleType)
             {
                 e++;
             }
@@ -228,14 +227,9 @@ namespace MdDumper.Visualization
             return true;
         }
 
-        private Method GetMethod(MethodHandle handle)
+        private MethodDefinition GetMethod(MethodDefinitionHandle handle)
         {
-            return Get(handle, (reader, h) => reader.GetMethod((MethodHandle)h));
-        }
-
-        private BlobHandle GetLocalSignature(LocalSignatureHandle handle)
-        {
-            return Get(handle, (reader, h) => reader.GetLocalSignature((LocalSignatureHandle)h));
+            return Get(handle, (reader, h) => reader.GetMethodDefinition((MethodDefinitionHandle) h));
         }
 
         private TEntity Get<TEntity>(Handle handle, Func<MetadataReader, Handle, TEntity> getter)
@@ -257,11 +251,6 @@ namespace MdDumper.Visualization
             return Literal(handle, (r, h) => "'" + r.GetString((StringHandle)h) + "'");
         }
 
-        private string Literal(NamespaceHandle handle)
-        {
-            return Literal(handle, (r, h) => "'" + r.GetString((NamespaceHandle)h) + "'");
-        }
-
         private string Literal(GuidHandle handle)
         {
             return Literal(handle, (r, h) => "{" + r.GetGuid((GuidHandle)h) + "}");
@@ -269,7 +258,7 @@ namespace MdDumper.Visualization
 
         private string Literal(BlobHandle handle)
         {
-            return Literal(handle, (r, h) => BitConverter.ToString(r.GetBytes((BlobHandle)h)));
+            return Literal(handle, (r, h) => BitConverter.ToString(r.GetBlobBytes((BlobHandle)h)));
         }
 
         private string Literal(Handle handle, Func<MetadataReader, Handle, string> getValue)
@@ -326,7 +315,7 @@ namespace MdDumper.Visualization
             }
 
             TableIndex table;
-            if (displayTable && MetadataTokens.TryGetTableIndex(handle.HandleType, out table))
+            if (displayTable && MetadataTokens.TryGetTableIndex(handle.Kind, out table))
             {
                 return string.Format("0x{0:x8} ({1})", reader.GetToken(handle), table);
             }
@@ -354,7 +343,7 @@ namespace MdDumper.Visualization
             return (handles.Count == 0) ? "nil" : Token(genericHandles.First(), displayTable: false) + "-" + Token(genericHandles.Last(), displayTable: false);
         }
 
-        public string TokenList(IReadOnlyCollection<Handle> handles, bool displayTable = false)
+        public string TokenList(InterfaceImplementationHandleCollection handles, bool displayTable = false)
         {
             if (handles.Count == 0)
             {
@@ -428,19 +417,19 @@ namespace MdDumper.Visualization
                 var entry = reader.GetTypeDefinition(handle);
 
                 uint size, packingSize;
-                bool hasLayout = entry.GetTypeLayout(out size, out packingSize);
-
+                var typeLayout = entry.GetLayout();
+                
                 AddRow(
                     Literal(entry.Name),
                     Literal(entry.Namespace),
                     Token(entry.GetDeclaringType()),
                     Token(entry.BaseType),
-                    TokenList(entry.GetImplementedInterfaces()),
+                    TokenList(entry.GetInterfaceImplementations()),
                     TokenRange(entry.GetFields(), h => h),
                     TokenRange(entry.GetMethods(), h => h),
                     EnumValue<int>(entry.Attributes),
-                    hasLayout ? size.ToString() : "n/a",
-                    hasLayout ? packingSize.ToString() : "n/a"
+                    typeLayout.IsDefault ? "n/a" : typeLayout.Size.ToString(),
+                    typeLayout.IsDefault ? "n/a" : typeLayout.PackingSize.ToString()
                 );
             }
 
@@ -460,7 +449,7 @@ namespace MdDumper.Visualization
 
             foreach (var handle in reader.FieldDefinitions)
             {
-                var entry = reader.GetField(handle);
+                var entry = reader.GetFieldDefinition(handle);
 
                 int offset = entry.GetOffset();
 
@@ -494,7 +483,7 @@ namespace MdDumper.Visualization
 
             foreach (var handle in reader.MethodDefinitions)
             {
-                var entry = reader.GetMethod(handle);
+                var entry = reader.GetMethodDefinition(handle);
                 var import = entry.GetImport();
 
                 AddRow(
@@ -548,8 +537,7 @@ namespace MdDumper.Visualization
 
             foreach (var handle in reader.MemberReferences)
             {
-                var entry = reader.GetMemberReference(handle);
-
+                var entry = reader.GetMemberReference(handle);                
                 AddRow(
                     Token(entry.Parent),
                     Literal(entry.Name),
@@ -574,7 +562,7 @@ namespace MdDumper.Visualization
 
                 AddRow(
                     Token(entry.Parent),
-                    EnumValue<byte>(entry.Type),
+                    EnumValue<byte>(entry.TypeCode),
                     Literal(entry.Value)
                 );
             }
@@ -632,9 +620,8 @@ namespace MdDumper.Visualization
 
             for (int i = 1, count = reader.GetTableRowCount(TableIndex.StandAloneSig); i <= count; i++)
             {
-                var value = reader.GetLocalSignature(MetadataTokens.LocalSignatureHandle(i));
-
-                AddRow(Literal(value));
+                var value = reader.GetStandaloneSignature(MetadataTokens.StandaloneSignatureHandle(i));
+                AddRow(Literal(value.Signature));
             }
 
             WriteRows("StandAloneSig (0x11):");
@@ -652,14 +639,14 @@ namespace MdDumper.Visualization
 
             foreach (var handle in reader.EventDefinitions)
             {
-                var entry = reader.GetEvent(handle);
-                var accessors = entry.GetAssociatedMethods();
+                var entry = reader.GetEventDefinition(handle);
+                var accessors = entry.GetAccessors();
 
                 AddRow(
                     Literal(entry.Name),
-                    Token(accessors.AddOn),
-                    Token(accessors.RemoveOn),
-                    Token(accessors.Fire),
+                    Token(accessors.Adder),
+                    Token(accessors.Remover),
+                    Token(accessors.Raiser),
                     EnumValue<int>(entry.Attributes)
                 );
             }
@@ -678,8 +665,8 @@ namespace MdDumper.Visualization
 
             foreach (var handle in reader.PropertyDefinitions)
             {
-                var entry = reader.GetProperty(handle);
-                var accessors = entry.GetAssociatedMethods();
+                var entry = reader.GetPropertyDefinition(handle);
+                var accessors = entry.GetAccessors();
 
                 AddRow(
                     Literal(entry.Name),
@@ -720,7 +707,7 @@ namespace MdDumper.Visualization
 
             for (int i = 1, count = reader.GetTableRowCount(TableIndex.ModuleRef); i <= count; i++)
             {
-                var value = reader.GetModuleReferenceName(MetadataTokens.ModuleReferenceHandle(i));
+                var value = reader.GetModuleReference(MetadataTokens.ModuleReferenceHandle(i)).Name;
                 AddRow(Literal(value));
             }
 
@@ -733,8 +720,8 @@ namespace MdDumper.Visualization
 
             for (int i = 1, count = reader.GetTableRowCount(TableIndex.TypeSpec); i <= count; i++)
             {
-                var value = reader.GetSignature(MetadataTokens.TypeSpecificationHandle(i));
-                AddRow(Literal(value));
+                var value = reader.GetTypeSpecification(MetadataTokens.TypeSpecificationHandle(i));
+                AddRow(Literal(value.Signature));
             }
 
             WriteRows("TypeSpec (0x1b):");
@@ -773,7 +760,7 @@ namespace MdDumper.Visualization
                 if (aggregator != null)
                 {
                     int generation;
-                    Handle primary = aggregator.GetGenerationHandle(entry, out generation);
+                    var primary = aggregator.GetGenerationHandle(entry, out generation);
                     bool isUpdate = readers[generation] != reader;
 
                     var primaryModule = readers[generation].GetModuleDefinition();
@@ -781,7 +768,7 @@ namespace MdDumper.Visualization
                     AddRow(
                         Token(entry),
                         primaryModule.Generation.ToString(),
-                        "0x" + MetadataTokens.GetRowNumber(primary).ToString("x6"),
+                        "0x" + MetadataTokens.GetRowNumber((EntityHandle) primary).ToString("x6"),
                         isUpdate ? "update" : "add");
                 }
                 else
@@ -876,10 +863,10 @@ namespace MdDumper.Visualization
                 "Namespace",
                 "Assembly"
             );
-
-            foreach (var handle in reader.TypeForwarders)
+            
+            foreach (var handle in reader.ExportedTypes)
             {
-                var entry = reader.GetTypeForwarder(handle);
+                var entry = reader.GetExportedType(handle);
                 AddRow(
                     Literal(entry.Name),
                     Literal(entry.Namespace),
@@ -1037,7 +1024,7 @@ namespace MdDumper.Visualization
             var handle = MetadataTokens.BlobHandle(0);
             do
             {
-                byte[] value = reader.GetBytes(handle);
+                byte[] value = reader.GetBlobBytes(handle);
                 writer.WriteLine("  {0:x}: {1}", reader.GetHeapOffset(handle), BitConverter.ToString(value));
                 handle = reader.GetNextHandle(handle);
             }
@@ -1066,13 +1053,13 @@ namespace MdDumper.Visualization
             writer.WriteLine();
         }
 
-        private sealed class TokenTypeComparer : IComparer<Handle>
+        private sealed class TokenTypeComparer : IComparer<EntityHandle>
         {
             public static readonly TokenTypeComparer Instance = new TokenTypeComparer();
 
-            public int Compare(Handle x, Handle y)
+            public int Compare(EntityHandle x, EntityHandle y)
             {
-                return x.HandleType.CompareTo(y.HandleType);
+                return x.Kind.CompareTo(y.Kind);
             }
         }
     }
