@@ -143,12 +143,12 @@ some of the details for using it properly.
 3. Instance methods in an `EventSource` are **assumed** to log data unless
    otherwise declared (even if they are private). 
     * If you have a need for ‘helper’ instance methods, you must put the
-      `[NonEvent]`` attribute on them to declare they are **not** methods that
+      `[NonEvent]` attribute on them to declare they are **not** methods that
       log events.
 4. Generally the name of the `EventSource` class is a bad ‘public’ name for the
    `EventSource`. Public names (the names that ETW use) has to be globally
    unique in the WORLD. Thus it is good practice to give your EventSource a
-   good official name using the `[EventSource]`` attribute.
+   good official name using the `[EventSource]` attribute.
 
         [EventSource(Name=”Samples-EventSourceDemos-Minimal”)]
         public sealed class MinimalEventSource : EventSource
@@ -201,7 +201,7 @@ More advanced uses of an event source may
   method definition, 
 * define new enumerated types for ETW event method arguments to replace less
   descriptive `int` arguments,
-* define `[NonEvent]`` methods
+* define `[NonEvent]` methods
 
 Here’s an example:
 
@@ -800,7 +800,7 @@ For detailed information on Event tracing for Windows [see this page][ETW].
   type.
 * **ETW Event Method**: a method defined in an Event Source that fires an ETW
   event. This must be a non-virtual, instance method returning void, that is not
-  marked with the `[NonEvent] attribute.
+  marked with the `[NonEvent]` attribute.
 * **ETW Transfer Event Method**: an ETW event method that marks a relation
   between the current activity and a related activity (supported starting with
   v4.5.1 and the NuGet package).
