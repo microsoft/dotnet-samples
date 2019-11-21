@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Metadata" Version="1.8.0-preview3.19551.4" />
+    <PackageReference Include="System.Reflection.Metadata" Version="1.7.0" />
   </ItemGroup>
 
 </Project>
