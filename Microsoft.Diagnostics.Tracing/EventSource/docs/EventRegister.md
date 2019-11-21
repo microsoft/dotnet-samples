@@ -177,8 +177,7 @@ the one that controls all the validation/registration behavior exposed through
 the `EventRegister` NuGet package.
 
 #### Command line options
-T
-he command line options accepted by `EventRegister` have a direct correlation to
+The command line options accepted by `EventRegister` have a direct correlation to
 the properties described above. The one that may need explanation is
 `ManifestXmlPrefix`, which is simply the concatenation of `$(EtwManifestOutDir)`
 and `$(EtwManifestBaseName)`.
