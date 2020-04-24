@@ -144,7 +144,7 @@ namespace TraceEventSamples
         /// <returns>IObservable{Statistics}</returns>
         private static IObservable<Statistics> ComputeRunningStats<T>(IObservable<T> source, Func<T, double> selector, int windowSize)
         {
-            // Create a stream of floating point valeus from the stream of Ts
+            // Create a stream of floating point values from the stream of Ts
             IObservable<double> values = from item in source select selector(item);
 
             // for each new data point, compute the new running sum to for groups of the last 'windowSize' data points.  
