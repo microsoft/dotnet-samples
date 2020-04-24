@@ -154,8 +154,8 @@ namespace TraceEventSamples
         }
 
         /// <summary>
-        /// Print data.  Note that this method is called FROM DIFFERNET THREADS which means you need to properly
-        /// lock any read-write data you access.   It turns out Out.Writeline is already thread safe so
+        /// Print data.  Note that this method is called FROM DIFFERENT THREADS which means you need to properly
+        /// lock any read-write data you access.   It turns out Out.WriteLine is already thread safe so
         /// there is nothing I have to do in this case. 
         /// </summary>
         static void Print(TraceEvent data)
