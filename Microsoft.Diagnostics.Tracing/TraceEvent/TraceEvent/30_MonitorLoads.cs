@@ -24,7 +24,7 @@ using System.Threading;
 //     * Connect a ETWTraceEventSource for the session, An TraceEventSource represents the stream of events
 //     * Connect a TraceEventParser to the source.    Parsers know how to interpret events from particular 
 //          ETW providers.  In this case we care about Kernel events so we get the KernelTraceEventParser
-//     * Attach callbacks to the Parser for the events you are interested in.  THese callback get events
+//     * Attach callbacks to the Parser for the events you are interested in.  These callback get events
 //          that are nicely parsed into intellisense-friendly properties. 
 //     * Call the ETWTraceEventSource.Process() method, which waits for events and sends them to the callbacks. 
 //     
@@ -67,7 +67,7 @@ namespace TraceEventSamples
             // restrictions.   
             using (TraceEventSession session = new TraceEventSession(KernelTraceEventParser.KernelSessionName))
             {
-                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROESS THAT CREATES THEM! */
+                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROCESS THAT CREATES THEM! */
                 // Unlike most other resources on the system, ETW session live beyond the lifetime of the 
                 // process that created them.   This is very useful in some scenarios, but also creates the 
                 // very real possibility of leaving 'orphan' sessions running.  
