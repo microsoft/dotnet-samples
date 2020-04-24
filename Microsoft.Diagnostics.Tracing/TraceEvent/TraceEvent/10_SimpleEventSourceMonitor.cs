@@ -67,13 +67,13 @@ namespace TraceEventSamples
             // is for.  It can be anything, but it should be descriptive and unique.   If you expect multiple versions
             // of your program to run simultaneously, you need to generate unique names (e.g. add a process ID suffix) 
             // however this is dangerous because you can leave data collection on if the program ends unexpectedly.  
-            var sessionName = "SimpleMontitorSession";
+            var sessionName = "SimpleMonitorSession";
             Out.WriteLine("Creating a '{0}' session", sessionName);
             Out.WriteLine("Use 'logman query -ets' to see active sessions.");
             Out.WriteLine("Use 'logman stop {0} -ets' to manually stop orphans.", sessionName);
             using (var session = new TraceEventSession(sessionName))
             {
-                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROESS THAT CREATES THEM! */
+                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROCESS THAT CREATES THEM! */
                 // Unlike most other resources on the system, ETW session live beyond the lifetime of the 
                 // process that created them.   This is very useful in some scenarios, but also creates the 
                 // very real possibility of leaving 'orphan' sessions running.  
@@ -104,7 +104,7 @@ namespace TraceEventSamples
                 // is so common, that TraceEventSource as a shortcut property called 'Dynamic' that fetches this parsers.  
 
                 // For debugging, and demo purposes, hook up a callback for every event that 'Dynamic' knows about (this is not EVERY
-                // event only those know about by DynamiceTraceEventParser).   However the 'UnhandledEvents' handler below will catch
+                // event only those know about by DynamicTraceEventParser).   However the 'UnhandledEvents' handler below will catch
                 // the other ones.
                 session.Source.Dynamic.All += delegate(TraceEvent data)
                 {
