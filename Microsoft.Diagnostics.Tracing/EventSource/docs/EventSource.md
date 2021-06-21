@@ -627,7 +627,7 @@ during the initialization of the event source instance.
 
 In v4.5 exceptions thrown during event source initialization can be observed as
 first chance exceptions, either in a debugger or with an ETW listener. See
-[this blog post](http://blogs.msdn.com/b/vancem/archive/2012/12/21/why-my-doesn-t-my-eventsource-produce-any-events.aspx)
+[this blog post](https://docs.microsoft.com/en-us/archive/blogs/vancem/why-doesnt-my-eventsource-produce-any-events)
 for details.
 
 ## Event Source Assumptions and Validation
