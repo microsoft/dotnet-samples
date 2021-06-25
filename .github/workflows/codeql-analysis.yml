@@ -1,0 +1,46 @@
+name: CodeQL Analysis
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        projects: [
+          'Microsoft.Diagnostics.Tracing\EventSource\EventSource.sln',
+          'Microsoft.Diagnostics.Tracing\TraceEvent\TraceEvent.sln',
+          'System.Numerics\SIMD\System.Numerics.Vectors.SampleCode.sln',
+          'System.Reflection.Metadata\MdDumper\MdDumper.csproj',
+          'WinForms-HDPI\PerMonitorAware\PerMonitorDemo.sln',
+          'WinForms-HDPI\SystemAware\HighDpiDemo.sln'
+        ]
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: csharp
+          queries: security-and-quality
+
+      - name: Build project
+        continue-on-error: true
+        run: |
+          nuget restore ${{ matrix.projects }}
+          msbuild ${{ matrix.projects }} /p:UseSharedCompilation=false
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
+# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
