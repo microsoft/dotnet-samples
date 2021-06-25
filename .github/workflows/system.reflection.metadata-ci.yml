@@ -1,0 +1,38 @@
+name: System.Reflection.Metadata CI Pipeline
+
+on:
+  push:
+    paths: 
+      - 'System.Reflection.Metadata/**'
+  pull_request:
+    paths:
+      - 'System.Reflection.Metadata/**'
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Continuuous Integration
+    runs-on: windows-latest
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Restore MdDumper project
+        run: |
+          nuget restore System.Reflection.Metadata\MdDumper\MdDumper.csproj
+
+      - name: Build MdDumper project
+        run: |
+          msbuild System.Reflection.Metadata\MdDumper\MdDumper.csproj -p:OutDir="${{ github.workspace }}\MdDumper Build Output"
+
+      - name: Upload MdDumper build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: MdDumper Build Output
+          path: 'MdDumper Build Output/'

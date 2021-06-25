@@ -1,0 +1,52 @@
+name: Diagnostics.Tracing CI Pipeline
+
+on:
+  push:
+    paths: 
+      - 'Microsoft.Diagnostics.Tracing/**'
+  pull_request:
+    paths:
+      - 'Microsoft.Diagnostics.Tracing/**'
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Continuuous Integration
+    runs-on: windows-latest
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Restore EventSource solution
+        run: |
+          nuget restore Microsoft.Diagnostics.Tracing\EventSource\EventSource.sln
+
+      - name: Build EventSource solution
+        run: |
+          msbuild Microsoft.Diagnostics.Tracing\EventSource\EventSource.sln -p:Configuration=Release -p:Platform='Any CPU' -p:OutDir="${{ github.workspace }}\EventSource Build Output"
+
+      - name: Upload EventSource build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: EventSource Build Output
+          path: 'EventSource Build Output/'
+
+      - name: Restore TraceEvent solution
+        run: |
+          nuget restore Microsoft.Diagnostics.Tracing\TraceEvent\TraceEvent.sln
+
+      - name: Build TraceEvent solution
+        run: |
+          msbuild Microsoft.Diagnostics.Tracing\TraceEvent\TraceEvent.sln -p:Configuration=Release -p:Platform='Any CPU' -p:OutDir="${{ github.workspace }}\TraceEvent Build Output"
+
+      - name: Upload TraceEvent build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: TraceEvent Build Output
+          path: 'TraceEvent Build Output/'

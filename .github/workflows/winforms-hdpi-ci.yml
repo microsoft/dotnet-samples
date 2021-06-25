@@ -1,0 +1,52 @@
+name: WinForms-HDPI CI Pipeline
+
+on:
+  push:
+    paths: 
+      - 'WinForms-HDPI/**'
+  pull_request:
+    paths:
+      - 'WinForms-HDPI/**'
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Continuuous Integration
+    runs-on: windows-latest
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Restore PerMonitorAware solution
+        run: |
+          nuget restore WinForms-HDPI\PerMonitorAware\PerMonitorDemo.sln
+
+      - name: Build PerMonitorAware solution
+        run: |
+          msbuild WinForms-HDPI\PerMonitorAware\PerMonitorDemo.sln -p:Configuration=Release -p:Platform='Any CPU' -p:OutDir="${{ github.workspace }}\PerMonitorAware Build Output"
+
+      - name: Upload PerMonitorAware build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PerMonitorAware Build Output
+          path: 'PerMonitorAware Build Output/'
+
+      - name: Restore SystemAware solution
+        run: |
+          nuget restore WinForms-HDPI\SystemAware\HighDpiDemo.sln
+
+      - name: Build SystemAware solution
+        run: |
+          msbuild WinForms-HDPI\SystemAware\HighDpiDemo.sln -p:Configuration=Release -p:Platform='Any CPU' -p:OutDir="${{ github.workspace }}\SystemAware Build Output"
+
+      - name: Upload SystemAware build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: SystemAware Build Output
+          path: 'SystemAware Build Output/'

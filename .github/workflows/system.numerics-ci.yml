@@ -1,0 +1,48 @@
+name: System.Numerics CI Pipeline
+
+on:
+  push:
+    paths: 
+      - 'System.Numerics/**'
+  pull_request:
+    paths:
+      - 'System.Numerics/**'
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Continuuous Integration
+    runs-on: windows-latest
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Restore System.Numerics solution
+        run: |
+          nuget restore System.Numerics\SIMD\System.Numerics.Vectors.SampleCode.sln
+
+      - name: Build Mandelbrot project
+        run: |
+          msbuild System.Numerics\SIMD\Mandelbrot\Mandelbrot.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir="${{ github.workspace }}\Mandelbrot Build Output"
+
+      - name: Upload Mandelbrot build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Mandelbrot Build Output
+          path: 'Mandelbrot Build Output/'
+
+      - name: Build RayTracer project
+        run: |
+          msbuild System.Numerics\SIMD\RayTracer\RayTracer.csproj -p:Configuration=Release -p:Platform='AnyCPU' -p:OutDir="${{ github.workspace }}\RayTracer Build Output"
+
+      - name: Upload RayTracer build output as pipeline artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: RayTracer Build Output
+          path: 'RayTracer Build Output/'
