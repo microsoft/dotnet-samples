@@ -80,7 +80,7 @@ namespace TraceEventSamples
             var task1 = Task.Run(() =>
             {
                 // Note that TraceEventSession and EtwTraceEventParser are IN GENERAL NOT THREADSAFE, 
-                // Normally this is not a hardship you just set up the session TraceDispacher on one
+                // Normally this is not a hardship you just set up the session TraceDispatcher on one
                 // thread.  It is OK to call a session's Dispose() and 'Enable and Disable provider APIS
                 // from another thread, but things associated with ETWTraceEventSource and TraceEventParsers
                 // should all be on the same thread.  
@@ -116,7 +116,7 @@ namespace TraceEventSamples
             var task2 = Task.Run(() =>
             {
                 // Note that TraceEventSession and EtwTraceEventParser are IN GENERAL NOT THREADSAFE, 
-                // Normally this is not a hardship you just set up the session TraceDispacher on one
+                // Normally this is not a hardship you just set up the session TraceDispatcher on one
                 // thread.  It is OK to call a session's Dispose() and 'Enable and Disable provider APIS
                 // from another thread, but things associated with ETWTraceEventSource and TraceEventParsers
                 // should all be on the same thread.  
@@ -172,8 +172,8 @@ namespace TraceEventSamples
         }
 
         /// <summary>
-        /// Print data.  Note that this method is called FROM DIFFERNET THREADS which means you need to properly
-        /// lock any read-write data you access.   It turns out Out.Writeline is already thread safe so
+        /// Print data.  Note that this method is called FROM DIFFERENT THREADS which means you need to properly
+        /// lock any read-write data you access.   It turns out Out.WriteLine is already thread safe so
         /// there is nothing I have to do in this case. 
         /// </summary>
         static void Print(TraceEvent data)
