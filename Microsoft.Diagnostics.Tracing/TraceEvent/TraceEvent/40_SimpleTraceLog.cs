@@ -119,7 +119,7 @@ namespace TraceEventSamples
             using (var session = new TraceEventSession(sessionName, dataFileName))      // Since we give it a file name, the data goes there. 
             using (var kernelSession = new TraceEventSession(KernelTraceEventParser.KernelSessionName, Path.ChangeExtension(dataFileName, ".kernel.etl")))
             {
-                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROESS THAT CREATES THEM! */
+                /* BY DEFAULT ETW SESSIONS SURVIVE THE DEATH OF THE PROCESS THAT CREATES THEM! */
                 // Unlike most other resources on the system, ETW session live beyond the lifetime of the 
                 // process that created them.   This is very useful in some scenarios, but also creates the 
                 // very real possibility of leaving 'orphan' sessions running.  
