@@ -28,7 +28,7 @@ namespace EventSourceSamples
         protected override void OnEventSourceCreated(EventSource eventSource)
         {
             // Because we want to turn on every EventSource, we subscribe to a callback that triggers
-            // when new EventSources are created.  It is also fired when the EventListner is created
+            // when new EventSources are created.  It is also fired when the EventListener is created
             // for all pre-existing EventSources.  Thus this callback get called once for every 
             // EventSource regardless of the order of EventSource and EventListener creation.  
 
